@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Fragment } from "vue";
+import { Slot } from "../pacakges/molecule"
 </script>
 
 <template>
-  <div>
-   
-  </div>
+  <Slot>
+    <!-- <div></div> -->
+     <div>12323</div>
+  </Slot>
 </template>

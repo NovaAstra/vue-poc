@@ -14,7 +14,7 @@ export const createComponent = (
   ...options
 })
 
-export const renderSlotFragments = (children?: VNode[]) => {
+export const renderSlotFragments = (children?: VNode[]): VNode[] => {
   if (!children) return []
 
   return children.flatMap((child) => {
@@ -35,6 +35,9 @@ export const Slot = createComponent('Slot', {
 
       const firstNonCommentChildrenIndex = childrens.findIndex(child => child.type !== Comment);
       if (firstNonCommentChildrenIndex === -1) return childrens;
+
+      const firstNonCommentChildren = childrens[firstNonCommentChildrenIndex];
+      console.log(firstNonCommentChildren, "firstNonCommentChildren")
 
       return childrens;
     }
