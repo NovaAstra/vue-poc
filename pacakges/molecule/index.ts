@@ -1,20 +1,36 @@
 import {
-  type ComponentOptions,
   type VNode,
+  type IntrinsicElementAttributes,
+  type PropType,
   defineComponent,
   mergeProps,
   cloneVNode,
+  h,
   Fragment,
   Comment
 } from "vue";
 
-export const createComponent = (
-  name: string,
-  options: ComponentOptions
-) => defineComponent({
-  name: name,
-  ...options
-})
+export type DOMElements = keyof IntrinsicElementAttributes
+
+export type ElementType = Parameters<typeof h>[0]
+
+export const STRICT_VOID_TAGS: string[] = [
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr"
+]
+
 
 export const renderSlotFragments = (children?: VNode[]): VNode[] => {
   if (!children) return []
@@ -27,7 +43,8 @@ export const renderSlotFragments = (children?: VNode[]): VNode[] => {
   })
 }
 
-export const Slot = createComponent('Slot', {
+export const Slot = defineComponent({
+  name: 'Slot',
   inheritAttrs: false,
   setup(_, { attrs, slots }) {
     return () => {
@@ -47,6 +64,7 @@ export const Slot = createComponent('Slot', {
         : attrs
       if (firstNonCommentChildren.props?.class)
         delete firstNonCommentChildren.props.class
+      
       const cloned = cloneVNode(firstNonCommentChildren, mergedProps)
 
       for (const prop in mergedProps) {
@@ -62,5 +80,30 @@ export const Slot = createComponent('Slot', {
       childrens[firstNonCommentChildrenIndex] = cloned
       return childrens;
     }
+  }
+})
+
+export const Primitive = defineComponent({
+  name: 'Primitive',
+  inheritAttrs: false,
+  props: {
+    asChild: {
+      type: Boolean,
+      default: false,
+    },
+    as: {
+      type: [String, Object] as PropType<ElementType>,
+      default: 'div',
+    },
+  },
+  setup(props, { attrs, slots }) {
+    const asTag = props.asChild ? 'template' : props.as
+    if (typeof asTag === 'string' && STRICT_VOID_TAGS.includes(asTag))
+      return () => h(asTag, attrs)
+
+    if (asTag !== 'template')
+      return () => h(props.as, attrs, { default: slots.default })
+
+    return () => h(Slot, attrs, { default: slots.default })
   }
 })
