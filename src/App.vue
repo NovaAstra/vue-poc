@@ -3,8 +3,9 @@ import { Slot } from "../pacakges/molecule"
 </script>
 
 <template>
-  <Slot>
+  <Slot class="sdasdasddas">
     <!-- <div></div> -->
-     <div>12323</div>
+    <div class="asdas" ref="asd">12323</div>
+    <div>12323</div>
   </Slot>
 </template>
