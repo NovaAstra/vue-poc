@@ -31,7 +31,6 @@ export const STRICT_VOID_TAGS: string[] = [
   "wbr"
 ]
 
-
 export const renderSlotFragments = (children?: VNode[]): VNode[] => {
   if (!children) return []
 
@@ -64,7 +63,7 @@ export const Slot = defineComponent({
         : attrs
       if (firstNonCommentChildren.props?.class)
         delete firstNonCommentChildren.props.class
-      
+
       const cloned = cloneVNode(firstNonCommentChildren, mergedProps)
 
       for (const prop in mergedProps) {
